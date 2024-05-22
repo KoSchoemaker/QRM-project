@@ -19,8 +19,17 @@ checkFile(demographicsPath)
 print('->filesystem intact')
 
 # reading csv file
+activityDataFrame = pd.read_csv(activityPath)
 sleepDataFrame = pd.read_csv(sleepPath)
+demographicsDataFrame = pd.read_csv(demographicsPath)
+
+# get a list of all patientIds
+patientIDs = demographicsDataFrame[['patient_id']].to_numpy().flatten()
+
 print(sleepDataFrame.head())
+
+# later make a loop, for now just use one participant
+patientId = patientIDs[0]
 
 # IVs
 ## for a patient (because we're doing within-subject design):
