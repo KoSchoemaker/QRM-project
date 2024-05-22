@@ -3,25 +3,27 @@ import pandas as pd
 import os
 import os.path
 
-# defines
+def checkFile(filePath):
+    if not (os.path.isfile(filePath) and os.access(filePath, os.R_OK)):
+        raise FileExistsError(f'check if {filePath} is readable and intact')
+
+# filePaths
 activityPath = 'TIHM_Dataset/Activity.csv'
 sleepPath = 'TIHM_Dataset/Sleep.csv'
+demographicsPath = 'TIHM_Dataset/Demographics.csv'
 
 # check if needed files exist
-if os.path.isfile(activityPath) \
-    and os.access(activityPath, os.R_OK) \
-    and os.path.isfile(sleepPath) \
-    and os.access(sleepPath, os.R_OK):
-    print('filesystem intact')
-else:
-    raise FileExistsError('check if activity.csv and sleep.csv are readable and intact')
+checkFile(activityPath)
+checkFile(sleepPath)
+checkFile(demographicsPath)
+print('->filesystem intact')
 
 # reading csv file
-# df = pd.read_csv("people.csv")
-# print(df.head())
+sleepDataFrame = pd.read_csv(sleepPath)
+print(sleepDataFrame.head())
 
-# load data into pandas
-
-# select relevant data
-
-# analyze data
+# IVs
+## for a patient (because we're doing within-subject design):
+### for each day:
+#### get sleep schedule (first time sleep.csv registered and last time it was registered for a certain sleep period)
+### analyse data and create metric for consistency: get variance (?) for these two variables
