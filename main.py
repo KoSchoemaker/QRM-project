@@ -2,6 +2,7 @@
 import pandas as pd
 import os
 import os.path
+from sleepSchedule import getSleepSchedule
 
 def checkFile(filePath):
     if not (os.path.isfile(filePath) and os.access(filePath, os.R_OK)):
@@ -35,17 +36,5 @@ patientIDs = demographicsDataFrame[['patient_id']].to_numpy().flatten()
 # later make a loop, for now just use one participant
 patientId = patientIDs[1]
 
-# a pd series with all datetimes of sleep data from the patient
-patientSleepTimes = pd.to_datetime(sleepDataFrame[sleepDataFrame['patient_id'] == patientId]['date'])
-
-timeThreshold = 3600*3 # three hours
-prevData = None
-for index, data in patientSleepTimes.items():
-    if prevData == None:
-        prevData = data
-        continue
-    
-    delta = data-prevData
-    if delta.total_seconds() > timeThreshold:
-        print(f'wake time {prevData}, next sleep time {data}')
-    prevData = data
+(wakeTimes, sleepTimes) = getSleepSchedule(sleepDataFrame, patientId)
+print(wakeTimes)
