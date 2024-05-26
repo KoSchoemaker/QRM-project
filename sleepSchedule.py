@@ -19,6 +19,7 @@ def getSleepSchedule(sleepDataFrame, patientId):
     # the minimum duration that sleep has to occur for us to record it as such. This mainly exists to filter out
     #   naps during the daytime
     minimumDuration = 3600*2 # two hours TODO
+    # TODO exclude naps
 
     prevData = None
     wakeTimes = []
@@ -36,14 +37,10 @@ def getSleepSchedule(sleepDataFrame, patientId):
 
     return (wakeTimes, sleepTimes)
 
-# TODO normalize days (only look at times, perhaps using just a number of seconds/minutes into the day)
-# TODO exclude naps
-# TODO compare values (measure variance?)
-
 def getSleepVariance(sleepDataFrame, patientId, plotCircle = False):
     wakeSchedule, sleepSchedule = getSleepSchedule(sleepDataFrame, patientId)
     wakeCircularVariance = dataAnalysis.getCircularVariance(wakeSchedule)
     sleepCircularVariance = dataAnalysis.getCircularVariance(sleepSchedule)
     if plotCircle:
         plotting.wakeSleepCircle(wakeSchedule, sleepSchedule, patientId)
-    return (wakeCircularVariance, sleepCircularVariance)
+    return {'wake': wakeCircularVariance, 'sleep': sleepCircularVariance}

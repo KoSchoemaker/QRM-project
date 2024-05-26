@@ -37,3 +37,10 @@ for i, patientId in enumerate(patientIds):
     print(f'-> processing patientID {i}: {patientId}')
     sleepVariance = getSleepVariance(sleepDataFrame, patientId)
     print(f'sleepVariance= {sleepVariance}')
+    # TODO roomUsage.getRoomUsageVariances(activityDataframe, patientId), returns {bathroom: float bedroom: float etc.}
+    # DONE dataAnalysis.getVarianceSum(sleepVariance: dict, roomUsageVariance: dict), returns float
+    # TODO K-means clustering using elbow method OR hierarchal clustering or subjects using accumulated variance
+    #   https://www.geeksforgeeks.org/elbow-method-for-optimal-value-of-k-in-kmeans/
+    #   https://stackoverflow.com/questions/10136470/unsupervised-clustering-with-unknown-number-of-clusters
+
+    # TODO sleep quality DVs
