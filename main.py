@@ -1,13 +1,9 @@
 # imports
 import pandas as pd
-import os
-import os.path
+
+import fileIntegrity
 from sleepSchedule import getSleepVariance
 from roomUsage import getRoomUsageVariance
-
-def checkFile(filePath):
-    if not (os.path.isfile(filePath) and os.access(filePath, os.R_OK)):
-        raise FileExistsError(f'check if {filePath} is readable and intact')
 
 # filePaths
 activityPath = 'TIHM_Dataset/Activity.csv'
@@ -15,10 +11,7 @@ sleepPath = 'TIHM_Dataset/Sleep.csv'
 demographicsPath = 'TIHM_Dataset/Demographics.csv'
 
 # check if needed files exist
-checkFile(activityPath)
-checkFile(sleepPath)
-checkFile(demographicsPath)
-print('-> filesystem intact')
+fileIntegrity.checkFiles(activityPath, sleepPath, demographicsPath)
 
 # reading csv file
 activityDataFrame = pd.read_csv(activityPath)
