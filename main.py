@@ -3,6 +3,7 @@ import pandas as pd
 import os
 import os.path
 from sleepSchedule import getSleepVariance
+from roomUsage import getRoomUsageVariance
 
 def checkFile(filePath):
     if not (os.path.isfile(filePath) and os.access(filePath, os.R_OK)):
@@ -38,6 +39,8 @@ for i, patientId in enumerate(patientIds):
     sleepVariance = getSleepVariance(sleepDataFrame, patientId)
     print(f'sleepVariance= {sleepVariance}')
     # TODO roomUsage.getRoomUsageVariances(activityDataframe, patientId), returns {bathroom: float bedroom: float etc.}
+    roomUsageVariance = getRoomUsageVariance(activityDataFrame, patientId)
+    print(f'roomUsageVariance= {roomUsageVariance}')
     # DONE dataAnalysis.getVarianceSum(sleepVariance: dict, roomUsageVariance: dict), returns float
     # TODO K-means clustering using elbow method OR hierarchal clustering or subjects using accumulated variance
     #   https://www.geeksforgeeks.org/elbow-method-for-optimal-value-of-k-in-kmeans/

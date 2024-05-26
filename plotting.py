@@ -16,3 +16,6 @@ def wakeSleepCircle(wakeTimes, sleepTimes, patientId):
     plt.scatter(np.cos(circmean(sleepAngles)), np.sin(circmean(sleepAngles)), c='r', s=15)
     plt.savefig(f'{patientId} sleep wake circle')
     plt.close()
+
+def roomUsageCircle(times: dict, patientId):
+    pass
