@@ -2,6 +2,7 @@
 import pandas as pd
 
 import fileIntegrity
+import patientSelection
 from sleepSchedule import getSleepVariance
 from roomUsage import getRoomUsageVariance
 
@@ -19,12 +20,7 @@ sleepDataFrame = pd.read_csv(sleepPath)
 demographicsDataFrame = pd.read_csv(demographicsPath)
 
 # get a list of all patientIds
-patientIds = demographicsDataFrame[['patient_id']].to_numpy().flatten()
-
-# only consider participants that have both sleep and activity data
-patientIds = [id for id in patientIds if id in sleepDataFrame[['patient_id']].values and id in activityDataFrame[['patient_id']].values]
-
-# TODO remove participants with less that x sleep data
+patientIds = patientSelection.getPatientIds(demographicsDataFrame, sleepDataFrame, activityDataFrame)
 
 # patientIds = [patientIds[4]] # for now just use one participant. comment line for loop over all participants
 for i, patientId in enumerate(patientIds):
