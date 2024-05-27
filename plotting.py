@@ -1,11 +1,11 @@
-import sleepSchedule
+import dataAnalysis
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import circmean
 
 def wakeSleepCircle(wakeTimes, sleepTimes, patientId):
-    wakeAngles = sleepSchedule.getTimesAngles(wakeTimes)
-    sleepAngles = sleepSchedule.getTimesAngles(sleepTimes)
+    wakeAngles = dataAnalysis.getTimesAngles(wakeTimes)
+    sleepAngles = dataAnalysis.getTimesAngles(sleepTimes)
 
     plt.plot(np.cos(np.linspace(0, 2*np.pi, 500)),np.sin(np.linspace(0, 2*np.pi, 500)),c='k', zorder=-1)
     plt.axis('equal')
