@@ -1,4 +1,14 @@
 import numpy as np
+import datetime
+
+def toTimeSinceMidnight(timestampList):
+    if len(timestampList) == 0:
+        return []
+    # print(timestampList[0])
+    dt = datetime.datetime.fromtimestamp(int(timestampList[0]))
+    dayStart = datetime.datetime(dt.year, dt.month, dt.day, 0, 0, 0).timestamp()
+
+    return [timestamp - dayStart for timestamp in timestampList]
 
 # in: list of <tuple> (hour, minutes), in 24 hour, 60 min format. Ex. [(23,59), (14,25), (00,45), (12,0)]
 # returns list of angles corresponding to these times
@@ -20,8 +30,31 @@ def getCircularVariance(times):
     circular_variance = 1 - R
     return circular_variance
 
+def getDiceCoefficient(timesList):
+    diceValues = []
+    previousDay = None
+    lounge = timesList
+    for dayStart in range(1554069600, 1561845600, 86400):
+        dayRange = range(dayStart, dayStart + 86399)
+
+        loungeCurrentDay = np.intersect1d(dayRange, lounge)
+        print(loungeCurrentDay)
+        if previousDay is None or (len(previousDay) + len(loungeCurrentDay)) == 0:
+            previousDay = toTimeSinceMidnight(loungeCurrentDay)
+            continue
+
+        timeOfDay = toTimeSinceMidnight(loungeCurrentDay)
+
+        dice = 2 * len(np.intersect1d(previousDay, timeOfDay)) / (len(previousDay) + len(timeOfDay))
+        diceValues.append(dice)
+        previousDay = timeOfDay
+    
+    if len(diceValues) > 0:
+        return np.mean(diceValues)
+    return 0
+
 def getCircularVarianceFromDict(timesDict: dict):
-    return {key: getCircularVariance(timesList) for key, timesList in timesDict}
+    return {key: getDiceCoefficient(timesList) for key, timesList in timesDict.items()}
 
 def getVarianceSum(sleepVariance: dict, roomUsageVariance: dict):
     return sum(sleepVariance.values()) + sum(roomUsageVariance.values())

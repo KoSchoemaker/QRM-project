@@ -1,4 +1,5 @@
 import dataAnalysis
+
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import circmean
@@ -17,5 +18,23 @@ def wakeSleepCircle(wakeTimes, sleepTimes, patientId):
     plt.savefig(f'{patientId} sleep wake circle')
     plt.close()
 
-def roomUsageCircle(times: dict, patientId):
-    pass
+def roomUsageBinaryDay(roomsDict, patientId):
+    #first date 2019-04-01 00.00.00     1554069600      86400 seconds in a day
+    # last date 2019-06-30 23.59.59     1561845600
+
+    lounge = roomsDict['Lounge']
+
+    for dayStart in range(1554069600, 1561845600, 86400):
+        dayRange = range(dayStart, dayStart + 86399)
+
+        loungeMask = np.isin(dayRange, lounge)
+
+        plt.plot(dayRange, loungeMask, 'r')
+        plt.savefig(f'{patientId} on day {dayStart}')
+        plt.close()
+
+def dicePlot(diceValues, patientId):
+    plt.ylim(0,1)
+    plt.plot(range(len(diceValues)), diceValues, 'r')
+    plt.savefig(f'{patientId} diceplot')
+    plt.close()
