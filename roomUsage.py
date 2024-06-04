@@ -37,7 +37,7 @@ def getRoomUsage(activityDataframe, patientId):
         startEvent = event
         previousEvent = event
         eventDuration = 0
-    # plotting.roomUsageBinaryDay(recordedEvents, patientId)
+    plotting.roomUsageBinaryDay(recordedEvents, patientId)
 
     return recordedEvents
 
