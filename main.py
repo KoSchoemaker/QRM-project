@@ -1,10 +1,11 @@
 # imports
 import pandas as pd
+import numpy as np
 
 import fileIntegrity
 import patientSelection
 from sleepSchedule import getSleepVariance
-from roomUsage import getRoomUsageVariance
+from roomUsage import getRoomUsageMetric
 
 # filePaths
 activityPath = 'TIHM_Dataset/Activity.csv'
@@ -21,18 +22,19 @@ demographicsDataFrame = pd.read_csv(demographicsPath)
 
 # get a list of all patientIds
 patientIds = patientSelection.getPatientIds(demographicsDataFrame, sleepDataFrame, activityDataFrame)
-
+roomusagedict = {}
 # patientIds = [patientIds[4]] # for now just use one participant. comment line for loop over all participants
 for i, patientId in enumerate(patientIds):
     print(f'-> processing patientID {i}: {patientId}')
     sleepVariance = getSleepVariance(sleepDataFrame, patientId)
     print(f'sleepVariance= {sleepVariance}')
-    # TODO roomUsage.getRoomUsageVariances(activityDataframe, patientId), returns {bathroom: float bedroom: float etc.}
-    roomUsageVariance = getRoomUsageVariance(activityDataFrame, patientId)
-    print(f'roomUsageVariance= {roomUsageVariance}')
-    # DONE dataAnalysis.getVarianceSum(sleepVariance: dict, roomUsageVariance: dict), returns float
-    # TODO K-means clustering using elbow method OR hierarchal clustering or subjects using accumulated variance
-    #   https://www.geeksforgeeks.org/elbow-method-for-optimal-value-of-k-in-kmeans/
-    #   https://stackoverflow.com/questions/10136470/unsupervised-clustering-with-unknown-number-of-clusters
-
+    roomUsageDice = getRoomUsageMetric(activityDataFrame, patientId)
+    print(f'roomUsageDice= {roomUsageDice}')
+    roomUsageMean = np.mean(list(roomUsageDice.values()))
+    print(f'roomUsageDiceMean= {roomUsageMean}')
+    roomusagedict[patientId] = roomUsageMean
     # TODO sleep quality DVs
+    
+import json
+with open('roomusagemean_results.json', 'w') as f:
+    json.dump(roomusagedict, f)

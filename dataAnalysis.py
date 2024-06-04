@@ -1,15 +1,52 @@
 import numpy as np
-import datetime
 
-def toTimeSinceMidnight(timestampList):
+def getDayEvents(timesList, dayStart):
+    return [time for time in timesList if time > dayStart and time < dayStart + 86400]
+
+def toTimeSinceMidnight(timestampList, dayStart):
     if len(timestampList) == 0:
         return []
-    # print(timestampList[0])
-    dt = datetime.datetime.fromtimestamp(int(timestampList[0]))
-    dayStart = datetime.datetime(dt.year, dt.month, dt.day, 0, 0, 0).timestamp()
 
     return [timestamp - dayStart for timestamp in timestampList]
 
+def getDiceCoefficient(timesList):
+    diceValues = []
+    previousDay = None
+
+    # from first day in experiment untill last, in increments of 1 day (86400 seconds)
+    for dayStart in range(1554069600, 1561845600, 86400):
+        if len(timesList) == 0:
+            return 0
+        if timesList[0] > dayStart + 86400:
+            continue
+
+        dayRange = range(dayStart, dayStart + 86399)
+
+        # CurrentDayEvents = np.intersect1d(dayRange, timesList)
+        CurrentDayEvents = getDayEvents(timesList, dayStart)
+        if previousDay is None or (len(previousDay) + len(CurrentDayEvents)) == 0:
+            previousDay = toTimeSinceMidnight(CurrentDayEvents, dayStart)
+            continue
+
+        timeOfDay = toTimeSinceMidnight(CurrentDayEvents, dayStart)
+
+        dice = 2 * len(np.intersect1d(previousDay, timeOfDay)) / (len(previousDay) + len(timeOfDay))
+        diceValues.append(dice)
+        previousDay = timeOfDay
+    
+    if len(diceValues) > 0:
+        return np.mean(diceValues)
+    return 0
+
+def getDiceFromDict(timesDict: dict):
+    print('here')
+    return {key: getDiceCoefficient(timesList) for key, timesList in timesDict.items()}
+
+def getDiceMean(timesDict: dict):
+    return np.mean(timesDict.values())
+
+
+"""DEPRICATED"""
 # in: list of <tuple> (hour, minutes), in 24 hour, 60 min format. Ex. [(23,59), (14,25), (00,45), (12,0)]
 # returns list of angles corresponding to these times
 def getTimesAngles(times):
@@ -29,35 +66,3 @@ def getCircularVariance(times):
     # Calculate the circular variance
     circular_variance = 1 - R
     return circular_variance
-
-def getDiceCoefficient(timesList):
-    diceValues = []
-    previousDay = None
-    lounge = timesList
-    for dayStart in range(1554069600, 1561845600, 86400):
-        dayRange = range(dayStart, dayStart + 86399)
-
-        loungeCurrentDay = np.intersect1d(dayRange, lounge)
-        print(loungeCurrentDay)
-        if previousDay is None or (len(previousDay) + len(loungeCurrentDay)) == 0:
-            previousDay = toTimeSinceMidnight(loungeCurrentDay)
-            continue
-
-        timeOfDay = toTimeSinceMidnight(loungeCurrentDay)
-
-        dice = 2 * len(np.intersect1d(previousDay, timeOfDay)) / (len(previousDay) + len(timeOfDay))
-        diceValues.append(dice)
-        previousDay = timeOfDay
-    
-    if len(diceValues) > 0:
-        return np.mean(diceValues)
-    return 0
-
-def getCircularVarianceFromDict(timesDict: dict):
-    return {key: getDiceCoefficient(timesList) for key, timesList in timesDict.items()}
-
-def getVarianceSum(sleepVariance: dict, roomUsageVariance: dict):
-    return sum(sleepVariance.values()) + sum(roomUsageVariance.values())
-
-if __name__ == "__main__":
-    print(getVarianceSum({1:12, 2:14}, {5:5, 8:7}))
