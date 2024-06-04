@@ -45,8 +45,6 @@ def getDiceFromDict(timesDict: dict):
 def getDiceMean(timesDict: dict):
     return np.mean(timesDict.values())
 
-
-"""DEPRICATED"""
 # in: list of <tuple> (hour, minutes), in 24 hour, 60 min format. Ex. [(23,59), (14,25), (00,45), (12,0)]
 # returns list of angles corresponding to these times
 def getTimesAngles(times):

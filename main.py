@@ -23,7 +23,7 @@ demographicsDataFrame = pd.read_csv(demographicsPath)
 # get a list of all patientIds
 patientIds = patientSelection.getPatientIds(demographicsDataFrame, sleepDataFrame, activityDataFrame)
 roomusagedict = {}
-patientIds = [patientIds[4]] # for now just use one participant. comment line for loop over all participants
+# patientIds = [patientIds[4]] # for now just use one participant. comment line for loop over all participants
 for i, patientId in enumerate(patientIds):
     print(f'-> processing patientID {i}: {patientId}')
     sleepVariance = getSleepVariance(sleepDataFrame, patientId)
@@ -32,9 +32,9 @@ for i, patientId in enumerate(patientIds):
     print(f'roomUsageDice= {roomUsageDice}')
     roomUsageMean = np.mean(list(roomUsageDice.values()))
     print(f'roomUsageDiceMean= {roomUsageMean}')
-    roomusagedict[patientId] = (roomUsageMean, np.mean(list(sleepVariance.values())))
+    roomusagedict[patientId] = (roomUsageMean, np.sum(list(sleepVariance.values())))
     # TODO sleep quality DVs
     
-# import json
-# with open('roomusagemean_sleepmean_results.json', 'w') as f:
-#     json.dump(roomusagedict, f)
+import json
+with open('intermediate_results/roomusagemean_sleepsum_results.json', 'w') as f:
+    json.dump(roomusagedict, f)
