@@ -38,3 +38,9 @@ def dicePlot(diceValues, patientId):
     plt.plot(range(len(diceValues)), diceValues, 'r')
     plt.savefig(f'{patientId} diceplot')
     plt.close()
+
+def latencyplot(latencies):
+    # plt.ylim(0,1)
+    plt.plot(range(len(latencies)), latencies, 'r')
+    plt.show()
+

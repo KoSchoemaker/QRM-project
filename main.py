@@ -6,6 +6,7 @@ import fileIntegrity
 import patientSelection
 from sleepSchedule import getSleepVariance
 from roomUsage import getRoomUsageMetric
+from sleepQuality import getSleepQuality
 
 # filePaths
 activityPath = 'TIHM_Dataset/Activity.csv'
@@ -24,20 +25,28 @@ demographicsDataFrame = pd.read_csv(demographicsPath)
 patientIds = patientSelection.getPatientIds(demographicsDataFrame, sleepDataFrame, activityDataFrame)
 # patientIds = [patientIds[4]] # for now just use one participant. comment line for loop over all participants
 
+efficiencies = {}
 roomusagedict = {}
 for i, patientId in enumerate(patientIds):
     print(f'-> processing patientID {i}: {patientId}')
 
-    sleepVariance = getSleepVariance(sleepDataFrame, patientId)
-    print(f'sleepVariance= {sleepVariance}')
+    # sleepVariance = getSleepVariance(sleepDataFrame, patientId)
+    # print(f'sleepVariance= {sleepVariance}')
 
-    roomUsageDice = getRoomUsageMetric(activityDataFrame, patientId)
-    print(f'roomUsageDice= {roomUsageDice}')
+    # roomUsageDice = getRoomUsageMetric(activityDataFrame, patientId)
+    # print(f'roomUsageDice= {roomUsageDice}')
 
-    roomUsageMean = np.mean(list(roomUsageDice.values()))
-    sleepScheduleSum = np.sum(list(sleepVariance.values()))
-    roomusagedict[patientId] = (roomUsageMean, sleepScheduleSum)
+    sleepQuality = getSleepQuality(sleepDataFrame, patientId)
+    print(f'sleepQuality= {sleepQuality}')
+    efficiencies[patientId] = sleepQuality
+    # roomUsageMean = np.mean(list(roomUsageDice.values()))
+    # sleepScheduleSum = np.sum(list(sleepVariance.values()))
+    # roomusagedict[patientId] = (roomUsageMean, sleepScheduleSum)
     
+# import json
+# with open('intermediate_results/room_usage_mean_sleep_schedule_sum_results.json', 'w') as f:
+#     json.dump(roomusagedict, f)
+
 import json
-with open('intermediate_results/room_usage_mean_sleep_schedule_sum_results.json', 'w') as f:
-    json.dump(roomusagedict, f)
+with open('intermediate_results/efficiencies.json', 'w') as f:
+    json.dump(efficiencies, f)
