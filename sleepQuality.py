@@ -1,75 +1,68 @@
 import pandas as pd
 import plotting
 
-def getSleepQuality(sleepDataFrame, patientId):
-    # loop over patients, give patient sleep data, create dataframe with info for all patients
-    sleepDataFrame['date'] = pd.to_datetime(sleepDataFrame['date'])
-    patientData = sleepDataFrame[sleepDataFrame['patient_id'] == patientId]
-
+def getSleepWakeDateTimes(patientEvents):
+    
+    # interval to be considered wake and sleep moment
     minimumInterval = 3600*3 # three hours
 
-    prevData = None
-    wakeTimes = []
-    prevSleepTime = None
-    sleepTimes = []
-    sleepPairs = []
-    for data in patientData.itertuples():
-        if prevData is None:
-            prevData = data
-            prevSleepTime = data.date
+    previousEvent = None
+    previousSleepTime = None
+    sleepWakeDateTimePair = []
+    for event in patientEvents.itertuples():
+        if previousEvent is None:
+            previousEvent = event
+            previousSleepTime = event.date
             continue
         
-        delta = data.date-prevData.date
+        delta = event.date-previousEvent.date
         if delta.total_seconds() > minimumInterval:
-            wakeTimes.append(prevData.date)
-            sleepTimes.append(data.date)
-            sleepPairs.append((prevSleepTime, prevData.date))
-            prevSleepTime = data.date
-        prevData = data
-    # offset = 0
-    # if wakeTimes[0] < sleepTimes[0]:
-    #     offset = 1
+            sleepWakeDateTimePair.append((previousSleepTime, previousEvent.date))
+            previousSleepTime = event.date
+        previousEvent = event
+
+    return sleepWakeDateTimePair
+
+def getSleepQuality(sleepDataFrame, patientId):
+    sleepDataFrame['date'] = pd.to_datetime(sleepDataFrame['date'])
+    patientEvents = sleepDataFrame[sleepDataFrame['patient_id'] == patientId]
+
+    sleepWakeDateTimePair = getSleepWakeDateTimes(patientEvents)
 
     maximumInterval = 3600*3
     monitorStates = sleepDataFrame.state.unique()
     recordedEvents = {key: [] for key in monitorStates}
     wasos=[]
     latencies=[]
+    
 
-    for sleep, wake in sleepPairs:
-        mask = (patientData['date'] > sleep) & (patientData['date'] <= wake)
-        patientDayData = patientData.loc[mask]
+    # for each day
+    for sleep, wake in sleepWakeDateTimePair:
+        mask = (patientEvents['date'] > sleep) & (patientEvents['date'] <= wake)
+        patientDayEvents = patientEvents.loc[mask]
 
         previousEvent = None
         startEvent = None
-        startWaso = None
-        waso = 0
-        latency = 0
-        for event in patientDayData.itertuples():
+        startOfSleepLatency = None
+        wasoDuration = 0
+        sleepLatencyDuration = 0
+        # for each event on this day
+        for event in patientDayEvents.itertuples():
             if previousEvent == None:
                 previousEvent = event
                 startEvent = previousEvent
                 if event.state == 'AWAKE':
-                    startWaso = event
+                    startOfSleepLatency = event
                 continue
             if previousEvent.state == event.state:
-                # eventDuration = (event.date - previousEvent.date).total_seconds()
-
-                # # not needed anymore
-                # # if eventDuration > maximumInterval:
-                # #     eventDuration = (previousEvent.date - startEvent.date).total_seconds()
-                # #     recordedEvents[startEvent.state].append(eventDuration)
-                # #     startEvent = event
                 previousEvent = event
                 continue
-            if startWaso is not None:
-                wasoDuration = (event.date - startWaso.date).total_seconds()
-                waso = wasoDuration
+            if startOfSleepLatency is not None:
+                sleepLatencyDuration = (event.date - startOfSleepLatency.date).total_seconds()
                 
-
-            if startWaso == None and previousEvent.state == 'AWAKE':
+            if startOfSleepLatency == None and previousEvent.state == 'AWAKE':
                 eventDuration = (event.date - startEvent.date).total_seconds()
-                latency = latency + eventDuration
+                wasoDuration = wasoDuration + eventDuration
 
             eventDuration = (event.date - previousEvent.date).total_seconds()
             if eventDuration > maximumInterval:
@@ -79,9 +72,9 @@ def getSleepQuality(sleepDataFrame, patientId):
             recordedEvents[startEvent.state].append(eventDuration)
             startEvent = event
             previousEvent = event
-            startWaso = None
-        latencies.append(latency)
-        wasos.append(waso)
+            startOfSleepLatency = None
+        latencies.append(wasoDuration)
+        wasos.append(sleepLatencyDuration)
 
     recordedEvents = {key: int(sum(value)) for key, value in recordedEvents.items()}
     # print(recordedEvents)
@@ -91,7 +84,6 @@ def getSleepQuality(sleepDataFrame, patientId):
 
     # metric
 
-    print(recordedEvents)
     sleepPeriod = recordedEvents['LIGHT'] + recordedEvents['DEEP'] + recordedEvents['REM']
     efficiency = (sleepPeriod - sum(wasos)) / (sleepPeriod + sum(latencies))
     return efficiency
