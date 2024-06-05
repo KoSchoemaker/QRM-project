@@ -93,7 +93,7 @@ def getSleepQuality(sleepDataFrame, patientId):
 
     print(recordedEvents)
     sleepPeriod = recordedEvents['LIGHT'] + recordedEvents['DEEP'] + recordedEvents['REM']
-    efficiency = (sleepPeriod - sum(wasos)) / sleepPeriod + sum(latencies)
+    efficiency = (sleepPeriod - sum(wasos)) / (sleepPeriod + sum(latencies))
     return efficiency
 
 def getPatientMetrics(patientSleep):
