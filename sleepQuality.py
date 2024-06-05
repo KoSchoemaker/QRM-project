@@ -73,7 +73,7 @@ def getSleepQuality(sleepDataFrame, patientId):
             startEvent = event
             previousEvent = event
             startOfSleepLatency = None
-        latencies.append(wasoDuration)
+        latencies.append(wasoDuration) # TODO switch around
         wasos.append(sleepLatencyDuration)
 
     recordedEvents = {key: int(sum(value)) for key, value in recordedEvents.items()}
@@ -84,8 +84,10 @@ def getSleepQuality(sleepDataFrame, patientId):
 
     # metric
 
+    
     sleepPeriod = recordedEvents['LIGHT'] + recordedEvents['DEEP'] + recordedEvents['REM']
-    efficiency = (sleepPeriod - sum(wasos)) / (sleepPeriod + sum(latencies))
+    efficiency = (sleepPeriod - sum(wasos)) / (sleepPeriod + sum(latencies)) # TODO what is sleepperiod? I think including waso but excluding latency period
+    print(f'sleepperiod {sleepPeriod}, wasos {sum(wasos)}, latency {sum(latencies)}')
     return efficiency
 
 def getPatientMetrics(patientSleep):
