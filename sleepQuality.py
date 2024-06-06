@@ -32,9 +32,8 @@ def getSleepQuality(sleepDataFrame, patientId):
     maximumInterval = 3600*3
     monitorStates = sleepDataFrame.state.unique()
     recordedEvents = {key: [] for key in monitorStates}
-    wasos=[]
-    latencies=[]
-    
+    wasoDurationList=[]
+    sleepLatencyDurationList=[]
 
     # for each day
     for sleep, wake in sleepWakeDateTimePair:
@@ -61,7 +60,7 @@ def getSleepQuality(sleepDataFrame, patientId):
                 sleepLatencyDuration = (event.date - startOfSleepLatency.date).total_seconds()
                 
             if startOfSleepLatency == None and previousEvent.state == 'AWAKE':
-                eventDuration = (event.date - startEvent.date).total_seconds()
+                eventDuration = (event.date - startEvent.date).total_seconds() # TODO add 5 minute awake rule
                 wasoDuration = wasoDuration + eventDuration
 
             eventDuration = (event.date - previousEvent.date).total_seconds()
@@ -73,22 +72,22 @@ def getSleepQuality(sleepDataFrame, patientId):
             startEvent = event
             previousEvent = event
             startOfSleepLatency = None
-        latencies.append(wasoDuration) # TODO switch around
-        wasos.append(sleepLatencyDuration)
+        wasoDurationList.append(wasoDuration)
+        sleepLatencyDurationList.append(sleepLatencyDuration)
 
     recordedEvents = {key: int(sum(value)) for key, value in recordedEvents.items()}
-    # print(recordedEvents)
-    # print(sum(list(recordedEvents.values())))
-    # plotting.latencyplot(latencies)
-    # plotting.latencyplot(wasos)
 
-    # metric
+    totalWASODuration = sum(wasoDurationList)
+    totalSleepLatencyDuration = sum(sleepLatencyDurationList)
+    sleepPeriod = recordedEvents['LIGHT'] + recordedEvents['DEEP'] + recordedEvents['REM'] + totalWASODuration
 
-    
-    sleepPeriod = recordedEvents['LIGHT'] + recordedEvents['DEEP'] + recordedEvents['REM']
-    efficiency = (sleepPeriod - sum(wasos)) / (sleepPeriod + sum(latencies)) # TODO what is sleepperiod? I think including waso but excluding latency period
-    print(f'sleepperiod {sleepPeriod}, wasos {sum(wasos)}, latency {sum(latencies)}')
-    return efficiency
+    totalSleepTime = sleepPeriod - totalWASODuration
+    totalMinutesInBed = sleepPeriod + totalSleepLatencyDuration
+
+    sleepEfficiency = totalSleepTime / totalMinutesInBed
+    print(f'sleepperiod {sleepPeriod/60}, wasos {totalWASODuration/60}, latency {totalSleepLatencyDuration/60}')
+
+    return sleepEfficiency, totalSleepTime, totalMinutesInBed
 
 def getPatientMetrics(patientSleep):
     # get values for one patients

@@ -23,7 +23,7 @@ demographicsDataFrame = pd.read_csv(demographicsPath)
 
 # get a list of all patientIds
 patientIds = patientSelection.getPatientIds(demographicsDataFrame, sleepDataFrame, activityDataFrame)
-# patientIds = [patientIds[4]] # for now just use one participant. comment line for loop over all participants
+# patientIds = [patientIds[1]] # for now just use one participant. comment line for loop over all participants
 
 efficiencies = {}
 roomusagedict = {}
@@ -36,9 +36,9 @@ for i, patientId in enumerate(patientIds):
     # roomUsageDice = getRoomUsageMetric(activityDataFrame, patientId)
     # print(f'roomUsageDice= {roomUsageDice}')
 
-    sleepQuality = getSleepQuality(sleepDataFrame, patientId)
-    print(f'sleepQuality= {sleepQuality}')
-    efficiencies[patientId] = sleepQuality
+    sleepEfficiency, totalSleepTime, totalMinutesInBed = getSleepQuality(sleepDataFrame, patientId)
+    print(f'sleepQuality= {sleepEfficiency}')
+    efficiencies[patientId] = sleepEfficiency
     # roomUsageMean = np.mean(list(roomUsageDice.values()))
     # sleepScheduleSum = np.sum(list(sleepVariance.values()))
     # roomusagedict[patientId] = (roomUsageMean, sleepScheduleSum)
