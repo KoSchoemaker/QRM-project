@@ -1,0 +1,14 @@
+{
+    "Shapiro-Wilk test for routine": {
+        "Statistics": 0.6033281087875366,
+        "p-value": 6.996426964178681e-05
+    },
+    "Shapiro-Wilk test for no_routine": {
+        "Statistics": 0.9759936332702637,
+        "p-value": 0.8781654834747314
+    },
+    "Levene's test": {
+        "Statistics": 2.5690592279309277,
+        "p-value": 0.12981710120846535
+    }
+}
