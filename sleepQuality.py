@@ -9,7 +9,7 @@ def getSleepWakeDateTimes(patientEvents):
     previousEvent = None
     previousSleepTime = None
     sleepWakeDateTimePair = []
-    for event in patientEvents.itertuples():
+    for event in patientEvents.itertuples(): # TODO exclude naps (minimum duration)
         if previousEvent is None:
             previousEvent = event
             previousSleepTime = event.date
@@ -30,6 +30,7 @@ def getSleepQuality(sleepDataFrame, patientId):
     sleepWakeDateTimePair = getSleepWakeDateTimes(patientEvents)
 
     maximumInterval = 3600*3
+    wasoMinimumThreshold = 5*60 #5 minutes
     monitorStates = sleepDataFrame.state.unique()
     recordedEvents = {key: [] for key in monitorStates}
     wasoDurationList=[]
@@ -60,8 +61,9 @@ def getSleepQuality(sleepDataFrame, patientId):
                 sleepLatencyDuration = (event.date - startOfSleepLatency.date).total_seconds()
                 
             if startOfSleepLatency == None and previousEvent.state == 'AWAKE':
-                eventDuration = (event.date - startEvent.date).total_seconds() # TODO add 5 minute awake rule
-                wasoDuration = wasoDuration + eventDuration
+                eventDuration = (event.date - startEvent.date).total_seconds()
+                if eventDuration > wasoMinimumThreshold:
+                    wasoDuration = wasoDuration + eventDuration
 
             eventDuration = (event.date - previousEvent.date).total_seconds()
             if eventDuration > maximumInterval:
