@@ -42,13 +42,20 @@ alpha = 0.05  # Significance level
 power_analysis = smp.TTestIndPower()
 power = power_analysis.solve_power(effect_size=effect_size, nobs1=n1, alpha=alpha, ratio=n2/n1, alternative='two-sided')
 
+# Desired power level
+desired_power = 0.80
+
+# Calculate required sample size
+required_n = power_analysis.solve_power(effect_size=effect_size, power=desired_power, alpha=alpha, ratio=n2/n1, alternative='two-sided')
+
 # Save the results to JSON file
 results = {
     "Mann-Whitney U test": {
         "U Statistic": u_stat,
         "p-value": p_value,
         "Rank-Biserial Correlation (Effect Size)": effect_size,
-        "Power": power
+        "Power": power,
+        "Required Sample Size per Group for 80% Power": required_n
     }
 }
 
@@ -56,3 +63,4 @@ with open('mann_whitney_results_with_power.json', 'w') as f:
     json.dump(results, f, indent=4)
 
 print(f'Mann-Whitney U test results with power saved to mann_whitney_results_with_power.json. Power: {power:.4f}')
+print(f'Required sample size per group to achieve 80% power: {required_n:.2f}')
