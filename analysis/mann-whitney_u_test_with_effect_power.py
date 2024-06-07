@@ -1,7 +1,7 @@
 import json
 import pandas as pd
 import scipy.stats as stats
-import numpy as np
+import statsmodels.stats.power as smp
 
 # Load the JSON files
 with open('intermediate_results/patient_clustering_results.json', 'r') as f:
@@ -36,16 +36,23 @@ def rank_biserial(u_stat, n1, n2):
 
 effect_size = rank_biserial(u_stat, n1, n2)
 
+# Power analysis using TTestIndPower as an approximation
+alpha = 0.05  # Significance level
+
+power_analysis = smp.TTestIndPower()
+power = power_analysis.solve_power(effect_size=effect_size, nobs1=n1, alpha=alpha, ratio=n2/n1, alternative='two-sided')
+
 # Save the results to JSON file
 results = {
     "Mann-Whitney U test": {
         "U Statistic": u_stat,
         "p-value": p_value,
-        "Rank-Biserial Correlation (Effect Size)": effect_size
+        "Rank-Biserial Correlation (Effect Size)": effect_size,
+        "Power": power
     }
 }
 
-with open('mann_whitney_results.json', 'w') as f:
+with open('mann_whitney_results_with_power.json', 'w') as f:
     json.dump(results, f, indent=4)
 
-print("Mann-Whitney U test results saved to mann_whitney_results.json.")
+print(f'Mann-Whitney U test results with power saved to mann_whitney_results_with_power.json. Power: {power:.4f}')
