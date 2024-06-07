@@ -1,10 +1,12 @@
 import pandas as pd
-import plotting
 
 def getSleepWakeDateTimes(patientEvents):
     
     # interval to be considered wake and sleep moment
     minimumInterval = 3600*3 # three hours
+
+    # minimum time a participant needs to be asleep to consider it sleep. Exists to exclude naps
+    minimumSleepTime = 3600*3 # three hours
 
     previousEvent = None
     previousSleepTime = None
@@ -17,7 +19,9 @@ def getSleepWakeDateTimes(patientEvents):
         
         delta = event.date-previousEvent.date
         if delta.total_seconds() > minimumInterval:
-            sleepWakeDateTimePair.append((previousSleepTime, previousEvent.date))
+            sleepDuration = (previousEvent.date - previousSleepTime).total_seconds()
+            if sleepDuration > minimumSleepTime:
+                sleepWakeDateTimePair.append((previousSleepTime, previousEvent.date))
             previousSleepTime = event.date
         previousEvent = event
 
@@ -90,35 +94,3 @@ def getSleepQuality(sleepDataFrame, patientId):
     print(f'sleepperiod {sleepPeriod/60}, wasos {totalWASODuration/60}, latency {totalSleepLatencyDuration/60}')
 
     return sleepEfficiency, totalSleepTime, totalMinutesInBed
-
-def getPatientMetrics(patientSleep):
-    # get values for one patients
-    return []
-
-def getSleepEfficiency(patientSleep):
-    # Total sleep time to time in bed ratio
-    pass
-
-def getSleepLatency(patientSleep):
-    # Time in minutes to transition from awake to sleep
-    pass
-
-def getREMDistribution(patientSleep):
-    # Ratio of REM time to total sleep time
-    pass
-
-def getLightSleepDistribution(patientSleep):
-    # Total sleep time to time in bed ratio
-    pass
-
-def getDeepSleepDistribution(patientSleep):
-    # Ratio of Deep sleep time to total sleep time
-    pass
-
-def getAwakenings(patientSleep):
-    # Number of times in which individuals became awake, >5 min
-    pass
-
-def getWakeAfterSleepOnset(patientSleep):
-    # Time spent awake after sleep has started and before final wake-up
-    pass
