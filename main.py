@@ -23,10 +23,10 @@ demographicsDataFrame = pd.read_csv(demographicsPath)
 
 # get a list of all patientIds
 patientIds = patientSelection.getPatientIds(demographicsDataFrame, sleepDataFrame, activityDataFrame)
-# patientIds = [patientIds[1]] # for now just use one participant. comment line for loop over all participants
+# patientIds = [patientIds[1]] # use just one participant. comment line for loop over all participants
 
-efficiencies = {}
-roomusagedict = {}
+sleepEfficiencyPatientDict = {}
+roomUsageSleepSchedulePatientDict = {}
 for i, patientId in enumerate(patientIds):
     print(f'-> processing patientID {i}: {patientId}')
 
@@ -35,18 +35,13 @@ for i, patientId in enumerate(patientIds):
 
     # roomUsageDice = getRoomUsageMetric(activityDataFrame, patientId)
     # print(f'roomUsageDice= {roomUsageDice}')
+    # roomUsageMean = np.mean(list(roomUsageDice.values()))
+    # roomUsageSleepSchedulePatientDict[patientId] = (roomUsageMean, sleepScheduleSum)
 
     sleepEfficiency, totalSleepTime, totalMinutesInBed = getSleepQuality(sleepDataFrame, patientId)
-    print(f'sleepQuality= {sleepEfficiency}')
-    efficiencies[patientId] = sleepEfficiency
-    # roomUsageMean = np.mean(list(roomUsageDice.values()))
+    print(f'sleepEfficiency= {sleepEfficiency}')
+    sleepEfficiencyPatientDict[patientId] = sleepEfficiency
     # sleepScheduleSum = np.sum(list(sleepVariance.values()))
-    # roomusagedict[patientId] = (roomUsageMean, sleepScheduleSum)
-    
-# import json
-# with open('intermediate_results/room_usage_mean_sleep_schedule_sum_results.json', 'w') as f:
-#     json.dump(roomusagedict, f)
 
-import json
-with open('intermediate_results/efficiencies.json', 'w') as f:
-    json.dump(efficiencies, f)
+fileIntegrity.writeJson(roomUsageSleepSchedulePatientDict, 'room_usage_mean_sleep_schedule_sum_results')
+fileIntegrity.writeJson(sleepEfficiencyPatientDict, 'efficiencies')

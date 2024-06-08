@@ -11,7 +11,7 @@ def getSleepWakeDateTimes(patientEvents):
     previousEvent = None
     previousSleepTime = None
     sleepWakeDateTimePair = []
-    for event in patientEvents.itertuples(): # TODO exclude naps (minimum duration)
+    for event in patientEvents.itertuples():
         if previousEvent is None:
             previousEvent = event
             previousSleepTime = event.date
