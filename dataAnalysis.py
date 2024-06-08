@@ -13,8 +13,8 @@ def getDiceCoefficient(timesList):
     diceValues = []
     previousDay = None
 
-    # from first day in experiment untill last, in increments of 1 day (86400 seconds)
-    for dayStart in range(1554069600, 1561845600, 86400):
+    # from first day in experiment until last, in increments of 1 day (86400 seconds)
+    for dayStart in range(1554069600, 1561845600, 86400): # TODO make into 5 min intervals instead of checking every second
         if len(timesList) == 0:
             return 0
         if timesList[0] > dayStart + 86400:

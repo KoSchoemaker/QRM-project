@@ -2,6 +2,7 @@ import pandas as pd
 
 import plotting
 import dataAnalysis
+import sleepQuality
 
 def getSleepSchedule(sleepDataFrame, patientId):
     # a pd series with all DateTime obj of sleep data from the patient
@@ -37,8 +38,22 @@ def getSleepSchedule(sleepDataFrame, patientId):
 
     return (wakeTimes, sleepTimes)
 
+def convertToSleepWakeTime(sleepWakeDateTimePair):
+    return [(pair[0].hour, pair[0].minute) for pair in sleepWakeDateTimePair], [(pair[1].hour, pair[1].minute) for pair in sleepWakeDateTimePair]
+
 def getSleepVariance(sleepDataFrame, patientId, plotCircle = False):
+    sleepDataFrame['date'] = pd.to_datetime(sleepDataFrame['date'])
+    patientEvents = sleepDataFrame[sleepDataFrame['patient_id'] == patientId]
+
+    sleepWakeDateTimePair = sleepQuality.getSleepWakeDateTimes(patientEvents)
+    sleepSchedule, wakeSchedule = convertToSleepWakeTime(sleepWakeDateTimePair)
+    print(len(wakeSchedule), len(sleepSchedule))
+    print(wakeSchedule)
+    print(sleepSchedule)
     wakeSchedule, sleepSchedule = getSleepSchedule(sleepDataFrame, patientId)
+    print(len(wakeSchedule), len(sleepSchedule))
+    print(wakeSchedule)
+    print(sleepSchedule)
     wakeCircularVariance = dataAnalysis.getCircularVariance(wakeSchedule)
     sleepCircularVariance = dataAnalysis.getCircularVariance(sleepSchedule)
     if plotCircle:

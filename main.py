@@ -30,8 +30,8 @@ roomUsageSleepSchedulePatientDict = {}
 for i, patientId in enumerate(patientIds):
     print(f'-> processing patientID {i}: {patientId}')
 
-    # sleepVariance = getSleepVariance(sleepDataFrame, patientId)
-    # print(f'sleepVariance= {sleepVariance}')
+    sleepVariance = getSleepVariance(sleepDataFrame, patientId)
+    print(f'sleepVariance= {sleepVariance}')
 
     # roomUsageDice = getRoomUsageMetric(activityDataFrame, patientId)
     # print(f'roomUsageDice= {roomUsageDice}')
@@ -43,5 +43,5 @@ for i, patientId in enumerate(patientIds):
     sleepEfficiencyPatientDict[patientId] = sleepEfficiency
     # sleepScheduleSum = np.sum(list(sleepVariance.values()))
 
-fileIntegrity.writeJson(roomUsageSleepSchedulePatientDict, 'room_usage_mean_sleep_schedule_sum_results')
+# fileIntegrity.writeJson(roomUsageSleepSchedulePatientDict, 'room_usage_mean_sleep_schedule_sum_results')
 fileIntegrity.writeJson(sleepEfficiencyPatientDict, 'efficiencies')

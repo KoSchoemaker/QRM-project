@@ -1,4 +1,5 @@
 import pandas as pd
+import datetime
 
 def getSleepWakeDateTimes(patientEvents):
     
@@ -7,6 +8,9 @@ def getSleepWakeDateTimes(patientEvents):
 
     # minimum time a participant needs to be asleep to consider it sleep. Exists to exclude naps
     minimumSleepTime = 3600*3 # three hours
+
+    firstDataSetEvent = datetime.datetime(2019, 4, 1, 0, 10) # 2019-04-01 00:00:00
+    lastDataSetEvent = datetime.datetime(2019, 6, 30, 23, 50) # 2019-06-30 23:59:00
 
     previousEvent = None
     previousSleepTime = None
@@ -17,14 +21,15 @@ def getSleepWakeDateTimes(patientEvents):
             previousSleepTime = event.date
             continue
         
-        delta = event.date-previousEvent.date
+        wakeTime = previousEvent.date
+        delta = event.date-wakeTime
         if delta.total_seconds() > minimumInterval:
-            sleepDuration = (previousEvent.date - previousSleepTime).total_seconds()
-            if sleepDuration > minimumSleepTime:
-                sleepWakeDateTimePair.append((previousSleepTime, previousEvent.date))
+            sleepDuration = (wakeTime - previousSleepTime).total_seconds()
+            if sleepDuration > minimumSleepTime and previousSleepTime > firstDataSetEvent and wakeTime < lastDataSetEvent:
+                sleepWakeDateTimePair.append((previousSleepTime, wakeTime))
             previousSleepTime = event.date
         previousEvent = event
-
+    # sleepWakeDateTimePair.append((previousSleepTime, previousEvent.date)) last day not counted because of sudden stop of data on 2019-06-30 23:59:00
     return sleepWakeDateTimePair
 
 def getSleepQuality(sleepDataFrame, patientId):
