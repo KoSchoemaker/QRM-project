@@ -30,6 +30,9 @@ def getRoomUsage(activityDataframe, patientId):
             previousEvent = event
             continue
         startUnix = ciso8601.parse_datetime(startEvent.date)
+        print(startEvent.date, type(startEvent.date))
+        print(ciso8601.parse_datetime(startEvent.date), type(ciso8601.parse_datetime(startEvent.date)))
+        print('ho')
         timeDelta = (ciso8601.parse_datetime(event.date) - startUnix).total_seconds()
         eventDuration = eventDuration + timeDelta
         startTimestamp = startUnix.timestamp()

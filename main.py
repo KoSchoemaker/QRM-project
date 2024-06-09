@@ -18,6 +18,8 @@ fileIntegrity.checkFiles(activityPath, sleepPath, demographicsPath)
 
 # reading csv file
 activityDataFrame = pd.read_csv(activityPath)
+# activityDataFrame['date'] = pd.to_datetime(activityDataFrame['date'])
+
 sleepDataFrame = pd.read_csv(sleepPath)
 sleepDataFrame['date'] = pd.to_datetime(sleepDataFrame['date'])
 
@@ -29,22 +31,28 @@ patientIds = patientSelection.getPatientIds(demographicsDataFrame, sleepDataFram
 
 sleepEfficiencyPatientDict = {}
 roomUsageSleepSchedulePatientDict = {}
+variableDict = {}
 for i, patientId in enumerate(patientIds):
     print(f'-> processing patientID {i}: {patientId}')
-
     patientSleepDataFrame = sleepDataFrame[sleepDataFrame['patient_id'] == patientId]
+
+    # IV sleep variance
     sleepVariance = getSleepVariance(patientSleepDataFrame, patientId)
     print(f'sleepVariance= {sleepVariance}')
 
-    # roomUsageDice = getRoomUsageMetric(activityDataFrame, patientId)
-    # print(f'roomUsageDice= {roomUsageDice}')
-    # roomUsageMean = np.mean(list(roomUsageDice.values()))
-    # roomUsageSleepSchedulePatientDict[patientId] = (roomUsageMean, sleepScheduleSum)
+    # IV room usage
+    roomUsageDice = getRoomUsageMetric(activityDataFrame, patientId)
+    print(f'roomUsageDice= {roomUsageDice}')
 
-    sleepEfficiency, totalSleepTime, totalMinutesInBed = getSleepQuality(patientSleepDataFrame, patientId)
+    # DV sleep quality
+    totalSleepTime, totalMinutesInBed = getSleepQuality(patientSleepDataFrame, patientId)
+    sleepEfficiency = totalSleepTime / totalMinutesInBed
     print(f'sleepEfficiency= {sleepEfficiency}')
-    sleepEfficiencyPatientDict[patientId] = sleepEfficiency
-    # sleepScheduleSum = np.sum(list(sleepVariance.values()))
 
-# fileIntegrity.writeJson(roomUsageSleepSchedulePatientDict, 'room_usage_mean_sleep_schedule_sum_results')
+    sleepEfficiencyPatientDict[patientId] = sleepEfficiency
+    roomUsageSleepSchedulePatientDict[patientId] = (np.mean(list(roomUsageDice.values())), np.sum(list(sleepVariance.values())))
+    variableDict[patientId] = {'sleepSchedule': sleepVariance, 'roomUsage': roomUsageDice, 'totalSleepTime': totalSleepTime, 'totalMinutesInBed': totalMinutesInBed, 'sleepEfficiency': sleepEfficiency}
+
 fileIntegrity.writeJson(sleepEfficiencyPatientDict, 'efficiencies')
+fileIntegrity.writeJson(roomUsageSleepSchedulePatientDict, 'room_usage_mean_sleep_schedule_sum')
+fileIntegrity.writeJson(variableDict, 'variables')

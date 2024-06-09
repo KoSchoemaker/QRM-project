@@ -93,7 +93,4 @@ def getSleepQuality(patientSleepDataFrame, patientId):
     totalSleepTime = sleepPeriod - totalWASODuration
     totalMinutesInBed = sleepPeriod + totalSleepLatencyDuration
 
-    sleepEfficiency = totalSleepTime / totalMinutesInBed
-    print(f'sleepperiod {sleepPeriod/60}, wasos {totalWASODuration/60}, latency {totalSleepLatencyDuration/60}')
-
-    return sleepEfficiency, totalSleepTime, totalMinutesInBed
+    return totalSleepTime, totalMinutesInBed
