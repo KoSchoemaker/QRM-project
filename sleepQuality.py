@@ -29,26 +29,24 @@ def getSleepWakeDateTimes(patientEvents):
                 sleepWakeDateTimePair.append((previousSleepTime, wakeTime))
             previousSleepTime = event.date
         previousEvent = event
-    # sleepWakeDateTimePair.append((previousSleepTime, previousEvent.date)) last day not counted because of sudden stop of data on 2019-06-30 23:59:00
+    if previousSleepTime > firstDataSetEvent and wakeTime < lastDataSetEvent:
+        sleepWakeDateTimePair.append((previousSleepTime, wakeTime)) # last day not counted because of sudden stop of data on 2019-06-30 23:59:00
     return sleepWakeDateTimePair
 
-def getSleepQuality(sleepDataFrame, patientId):
-    sleepDataFrame['date'] = pd.to_datetime(sleepDataFrame['date'])
-    patientEvents = sleepDataFrame[sleepDataFrame['patient_id'] == patientId]
-
-    sleepWakeDateTimePair = getSleepWakeDateTimes(patientEvents)
+def getSleepQuality(patientSleepDataFrame, patientId):
+    sleepWakeDateTimePair = getSleepWakeDateTimes(patientSleepDataFrame)
 
     maximumInterval = 3600*3
     wasoMinimumThreshold = 5*60 #5 minutes
-    monitorStates = sleepDataFrame.state.unique()
+    monitorStates = patientSleepDataFrame.state.unique()
     recordedEvents = {key: [] for key in monitorStates}
     wasoDurationList=[]
     sleepLatencyDurationList=[]
 
     # for each day
     for sleep, wake in sleepWakeDateTimePair:
-        mask = (patientEvents['date'] > sleep) & (patientEvents['date'] <= wake)
-        patientDayEvents = patientEvents.loc[mask]
+        mask = (patientSleepDataFrame['date'] > sleep) & (patientSleepDataFrame['date'] <= wake)
+        patientDayEvents = patientSleepDataFrame.loc[mask]
 
         previousEvent = None
         startEvent = None

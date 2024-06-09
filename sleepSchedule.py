@@ -41,19 +41,15 @@ def getSleepSchedule(sleepDataFrame, patientId):
 def convertToSleepWakeTime(sleepWakeDateTimePair):
     return [(pair[0].hour, pair[0].minute) for pair in sleepWakeDateTimePair], [(pair[1].hour, pair[1].minute) for pair in sleepWakeDateTimePair]
 
-def getSleepVariance(sleepDataFrame, patientId, plotCircle = False):
-    sleepDataFrame['date'] = pd.to_datetime(sleepDataFrame['date'])
-    patientEvents = sleepDataFrame[sleepDataFrame['patient_id'] == patientId]
+def getSleepVariance(patientSleepDataFrame, patientId, plotCircle = False):
 
-    sleepWakeDateTimePair = sleepQuality.getSleepWakeDateTimes(patientEvents)
+    # method 2 better
+    sleepWakeDateTimePair = sleepQuality.getSleepWakeDateTimes(patientSleepDataFrame)
     sleepSchedule, wakeSchedule = convertToSleepWakeTime(sleepWakeDateTimePair)
-    print(len(wakeSchedule), len(sleepSchedule))
-    print(wakeSchedule)
-    print(sleepSchedule)
-    wakeSchedule, sleepSchedule = getSleepSchedule(sleepDataFrame, patientId)
-    print(len(wakeSchedule), len(sleepSchedule))
-    print(wakeSchedule)
-    print(sleepSchedule)
+
+    # method 1 depricated
+    # wakeSchedule, sleepSchedule = getSleepSchedule(sleepDataFrame, patientId)
+
     wakeCircularVariance = dataAnalysis.getCircularVariance(wakeSchedule)
     sleepCircularVariance = dataAnalysis.getCircularVariance(sleepSchedule)
     if plotCircle:

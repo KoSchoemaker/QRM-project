@@ -19,6 +19,8 @@ fileIntegrity.checkFiles(activityPath, sleepPath, demographicsPath)
 # reading csv file
 activityDataFrame = pd.read_csv(activityPath)
 sleepDataFrame = pd.read_csv(sleepPath)
+sleepDataFrame['date'] = pd.to_datetime(sleepDataFrame['date'])
+
 demographicsDataFrame = pd.read_csv(demographicsPath)
 
 # get a list of all patientIds
@@ -30,7 +32,8 @@ roomUsageSleepSchedulePatientDict = {}
 for i, patientId in enumerate(patientIds):
     print(f'-> processing patientID {i}: {patientId}')
 
-    sleepVariance = getSleepVariance(sleepDataFrame, patientId)
+    patientSleepDataFrame = sleepDataFrame[sleepDataFrame['patient_id'] == patientId]
+    sleepVariance = getSleepVariance(patientSleepDataFrame, patientId)
     print(f'sleepVariance= {sleepVariance}')
 
     # roomUsageDice = getRoomUsageMetric(activityDataFrame, patientId)
@@ -38,7 +41,7 @@ for i, patientId in enumerate(patientIds):
     # roomUsageMean = np.mean(list(roomUsageDice.values()))
     # roomUsageSleepSchedulePatientDict[patientId] = (roomUsageMean, sleepScheduleSum)
 
-    sleepEfficiency, totalSleepTime, totalMinutesInBed = getSleepQuality(sleepDataFrame, patientId)
+    sleepEfficiency, totalSleepTime, totalMinutesInBed = getSleepQuality(patientSleepDataFrame, patientId)
     print(f'sleepEfficiency= {sleepEfficiency}')
     sleepEfficiencyPatientDict[patientId] = sleepEfficiency
     # sleepScheduleSum = np.sum(list(sleepVariance.values()))
