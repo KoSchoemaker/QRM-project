@@ -39,7 +39,6 @@ def getDiceCoefficient(timesList):
     return 0
 
 def getDiceFromDict(timesDict: dict):
-    print('here')
     return {key: getDiceCoefficient(timesList) for key, timesList in timesDict.items()}
 
 def getDiceMean(timesDict: dict):

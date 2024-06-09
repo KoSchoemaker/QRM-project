@@ -18,7 +18,7 @@ fileIntegrity.checkFiles(activityPath, sleepPath, demographicsPath)
 
 # reading csv file
 activityDataFrame = pd.read_csv(activityPath)
-# activityDataFrame['date'] = pd.to_datetime(activityDataFrame['date'])
+activityDataFrame['date'] = pd.to_datetime(activityDataFrame['date'])
 
 sleepDataFrame = pd.read_csv(sleepPath)
 sleepDataFrame['date'] = pd.to_datetime(sleepDataFrame['date'])

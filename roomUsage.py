@@ -1,5 +1,3 @@
-import ciso8601
-
 import plotting
 import dataAnalysis
 
@@ -29,13 +27,10 @@ def getRoomUsage(activityDataframe, patientId):
         if previousEvent.location_name == event.location_name:
             previousEvent = event
             continue
-        startUnix = ciso8601.parse_datetime(startEvent.date)
-        print(startEvent.date, type(startEvent.date))
-        print(ciso8601.parse_datetime(startEvent.date), type(ciso8601.parse_datetime(startEvent.date)))
-        print('ho')
-        timeDelta = (ciso8601.parse_datetime(event.date) - startUnix).total_seconds()
+
+        timeDelta = (event.date - startEvent.date).total_seconds()
         eventDuration = eventDuration + timeDelta
-        startTimestamp = startUnix.timestamp()
+        startTimestamp = startEvent.date.timestamp()
         recordedEvents[startEvent.location_name].extend(range(int(startTimestamp), int(startTimestamp + eventDuration)))
         startEvent = event
         previousEvent = event
