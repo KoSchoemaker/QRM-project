@@ -20,7 +20,7 @@ def getDiceCoefficient(timesList):
         if timesList[0] > dayStart + 86400:
             continue
 
-        dayRange = range(dayStart, dayStart + 86399)
+        dayRange = range(dayStart, dayStart + 86400)
 
         # CurrentDayEvents = np.intersect1d(dayRange, timesList)
         CurrentDayEvents = getDayEvents(timesList, dayStart)
