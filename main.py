@@ -50,7 +50,7 @@ for i, patientId in enumerate(patientIds):
     print(f'sleepEfficiency= {sleepEfficiency}')
 
     sleepEfficiencyPatientDict[patientId] = {'sleepEfficiency': sleepEfficiency, 'totalSleepTime': totalSleepTime, 'totalMinutesInBed': totalMinutesInBed}
-    roomUsageSleepSchedulePatientDict[patientId] = (np.mean(list(roomUsageDice.values())), np.sum(list(sleepVariance.values())))
+    roomUsageSleepSchedulePatientDict[patientId] = {'roomUsageDiceMean': np.mean(list(roomUsageDice.values())), 'sleepScheduleVarianceSum': np.sum(list(sleepVariance.values()))}
     variableDict[patientId] = {'sleepSchedule': sleepVariance, 'roomUsage': roomUsageDice, 'totalSleepTime': totalSleepTime, 'totalMinutesInBed': totalMinutesInBed, 'sleepEfficiency': sleepEfficiency}
 
 fileIntegrity.writeJson(sleepEfficiencyPatientDict, 'efficiencies')
