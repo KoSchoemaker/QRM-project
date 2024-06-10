@@ -21,11 +21,20 @@ for key, value in data.items():
 kmeans = KMeans(n_clusters=3, random_state=1234)
 kmeans.fit(xy)
 
-newLabels = [1 if int(label)==0 or int(label)==1 else 0 for label in kmeans.labels_ ]
+newLabels = np.array([1 if int(label)==0 or int(label)==1 else 0 for label in kmeans.labels_ ])
+newColors = ['orange' if int(label)==0 or int(label)==1 else 'blue' for label in kmeans.labels_ ]
 
-plt.scatter(x, y, c=newLabels)
+# plt.scatter(x, y, c=newColors)
+plt.scatter(x[newLabels==1], y[newLabels==1], c='blue')
+plt.scatter(x[newLabels==0], y[newLabels==0], c='orange')
 plt.ylabel('Sleep Schedule Variance')
 plt.xlabel('Room Usage Dice-Sørensen coefficient')
+ax = plt.gca()
+ax.legend(labels=['no routine', 'routine'], title='clusters', loc='upper right')
+# plt.legend()
+# leg = ax.get_legend()
+# leg.legend_handles[0].set_color('orange')
+# leg.legend_handles[1].set_color('blue')
 plt.show()
 plt.close()
 

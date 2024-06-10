@@ -76,13 +76,13 @@ def roomUsageBinaryDay(roomsDict, patientId, diceDict):
     #first date 2019-04-01 00.00.00     1554069600      86400 seconds in a day
     # last date 2019-06-30 23.59.59     1561845600
 
-    lounge = roomsDict['Kitchen']
+    roomSeconds = roomsDict['Kitchen']
     previousRange = None
     previousMask = None
     for dayStart in range(1554069600, 1561845600, 86400):
         dayRange = range(dayStart, dayStart + 86399)
 
-        loungeMask = np.isin(dayRange, lounge)
+        loungeMask = np.isin(dayRange, roomSeconds)
     
         if previousMask is None:
             previousRange = dayRange
