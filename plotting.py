@@ -62,20 +62,39 @@ def wakeSleepCircle(wakeTimes, sleepTimes, patientId, wakeCircularVariance, slee
     plt.savefig(f'figures/sleep_schedule_latest/{patientId} no-nap sleep circle', bbox_inches='tight')
     plt.close()
 
-def roomUsageBinaryDay(roomsDict, patientId):
+def roomUsageBinaryDay2(previousDay, timeOfDay):
+        
+        prevMask = np.isin(range(0, 86400), previousDay)
+        dayMask = np.isin(range(0, 86400), timeOfDay)
+        plt.plot(range(0,86400), dayMask, 'r')
+        plt.plot(range(0,86400), prevMask, 'b')
+        plt.show()
+        # plt.savefig(f'{patientId} on day {dayStart}')
+        plt.close()
+
+def roomUsageBinaryDay(roomsDict, patientId, diceDict):
     #first date 2019-04-01 00.00.00     1554069600      86400 seconds in a day
     # last date 2019-06-30 23.59.59     1561845600
 
-    lounge = roomsDict['Lounge']
-
+    lounge = roomsDict['Kitchen']
+    previousRange = None
+    previousMask = None
     for dayStart in range(1554069600, 1561845600, 86400):
         dayRange = range(dayStart, dayStart + 86399)
 
         loungeMask = np.isin(dayRange, lounge)
+    
+        if previousMask is None:
+            previousRange = dayRange
+            previousMask = loungeMask
+            continue
 
         plt.plot(dayRange, loungeMask, 'r')
+        plt.plot(previousRange, previousMask, 'b')
         plt.savefig(f'{patientId} on day {dayStart}')
         plt.close()
+        previousRange = dayRange
+        previousMask = loungeMask
 
 def dicePlot(diceValues, patientId):
     plt.ylim(0,1)
@@ -88,6 +107,9 @@ def latencyplot(latencies):
     plt.plot(range(len(latencies)), latencies, 'r')
     plt.show()
 
-# if __name__ == "__main__":
+def plotty(totalSleepTime, totalMinutesInBed):
+    plt.scatter(totalSleepTime, totalMinutesInBed, 'r')
+    plt.show()
 
+# if __name__ == "__main__":
 #     wakeSleepCircle(wakeTimes, sleepTimes, patientId):

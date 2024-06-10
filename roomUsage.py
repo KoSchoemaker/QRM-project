@@ -38,10 +38,9 @@ def getRoomUsage(activityDataframe, patientId):
 
     return recordedEvents
 
-def getRoomUsageMetric(activityDataframe, patientId, plotCircle=False):
+def getRoomUsageMetric(activityDataframe, patientId, plot=False):
     timesDict = getRoomUsage(activityDataframe, patientId)
-    circularVarianceDict = dataAnalysis.getDiceFromDict(timesDict)
-    if plotCircle:
-        # plotting.roomUsageCircle(timesDict, patientId)
-        plotting.roomUsageBinaryDay(timesDict, patientId)
-    return circularVarianceDict
+    diceDict = dataAnalysis.getDiceFromDict(timesDict)
+    if plot:
+        plotting.roomUsageBinaryDay(timesDict, patientId, diceDict)
+    return diceDict

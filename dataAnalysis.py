@@ -1,4 +1,5 @@
 import numpy as np
+import plotting
 
 def getDayEvents(timesList, dayStart):
     return [time for time in timesList if time > dayStart and time < dayStart + 86400]
@@ -30,6 +31,7 @@ def getDiceCoefficient(timesList):
 
         timeOfDay = toTimeSinceMidnight(CurrentDayEvents, dayStart)
 
+        # plotting.roomUsageBinaryDay2(previousDay, timeOfDay)
         dice = 2 * len(np.intersect1d(previousDay, timeOfDay)) / (len(previousDay) + len(timeOfDay))
         diceValues.append(dice)
         previousDay = timeOfDay
