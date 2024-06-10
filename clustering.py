@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import json
 
-with open('intermediate_results/roomusagemean_sleepsum_results.json', 'r') as f:
+with open('intermediate_results/room_usage_mean_sleep_schedule_sum.json', 'r') as f:
     data = json.load(f)
 
 x = np.array([x[0] for x in list(data.values())])
@@ -22,6 +22,8 @@ kmeans = KMeans(n_clusters=2)
 kmeans.fit(xy)
 
 plt.scatter(x, y, c=kmeans.labels_)
+plt.ylabel('Sleep Schedule Variance')
+plt.xlabel('Room Usage Dice-Sørensen coefficient')
 plt.show()
 plt.close()
 

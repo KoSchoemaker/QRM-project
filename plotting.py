@@ -11,11 +11,19 @@ def wakeSleepCircle(wakeTimes, sleepTimes, patientId):
     plt.plot(np.cos(np.linspace(0, 2*np.pi, 500)),np.sin(np.linspace(0, 2*np.pi, 500)),c='k', zorder=-1)
     plt.axis('equal')
     plt.axis('off')
+
+    # # set the circumference labels
+    # plt.set_xticks(np.linspace(0, 2*pi, 24, endpoint=False))
+    # plt.set_xticklabels(range(24))
+
+    # # make the labels go clockwise
+    # plt.set_theta_direction(-1)
+
     plt.scatter(np.cos(wakeAngles), np.sin(wakeAngles), c='b', s=15)
     plt.scatter(np.cos(circmean(wakeAngles)), np.sin(circmean(wakeAngles)), c='g', s=15)
     plt.scatter(np.cos(sleepAngles), np.sin(sleepAngles), c='y', s=15)
     plt.scatter(np.cos(circmean(sleepAngles)), np.sin(circmean(sleepAngles)), c='r', s=15)
-    plt.savefig(f'{patientId} sleep wake circle')
+    plt.savefig(f'{patientId} no-nap sleep circle')
     plt.close()
 
 def roomUsageBinaryDay(roomsDict, patientId):
@@ -44,3 +52,6 @@ def latencyplot(latencies):
     plt.plot(range(len(latencies)), latencies, 'r')
     plt.show()
 
+# if __name__ == "__main__":
+
+#     wakeSleepCircle(wakeTimes, sleepTimes, patientId):

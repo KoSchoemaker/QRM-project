@@ -49,7 +49,7 @@ for i, patientId in enumerate(patientIds):
     sleepEfficiency = totalSleepTime / totalMinutesInBed
     print(f'sleepEfficiency= {sleepEfficiency}')
 
-    sleepEfficiencyPatientDict[patientId] = sleepEfficiency
+    sleepEfficiencyPatientDict[patientId] = {'sleepEfficiency': sleepEfficiency, 'totalSleepTime': totalSleepTime, 'totalMinutesInBed': totalMinutesInBed}
     roomUsageSleepSchedulePatientDict[patientId] = (np.mean(list(roomUsageDice.values())), np.sum(list(sleepVariance.values())))
     variableDict[patientId] = {'sleepSchedule': sleepVariance, 'roomUsage': roomUsageDice, 'totalSleepTime': totalSleepTime, 'totalMinutesInBed': totalMinutesInBed, 'sleepEfficiency': sleepEfficiency}
 
