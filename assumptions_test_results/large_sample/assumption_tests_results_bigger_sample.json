@@ -1,0 +1,16 @@
+{
+    "Shapiro-Wilk test for normality": {
+        "no_routine": {
+            "Statistics": 0.8999264240264893,
+            "p-value": 0.3305354714393616
+        },
+        "routine": {
+            "Statistics": 0.873932957649231,
+            "p-value": 0.11106434464454651
+        }
+    },
+    "Levene's test for homogeneity of variances": {
+        "Statistics": 23.46201919758533,
+        "p-value": 0.00021467531789033233
+    }
+}
