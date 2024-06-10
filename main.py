@@ -27,7 +27,7 @@ demographicsDataFrame = pd.read_csv(demographicsPath)
 
 # get a list of all patientIds
 patientIds = patientSelection.getPatientIds(demographicsDataFrame, sleepDataFrame, activityDataFrame)
-patientIds = [patientIds[1]] # use just one participant. comment line for loop over all participants
+# patientIds = [patientIds[1]] # use just one participant. comment line for loop over all participants
 
 sleepEfficiencyPatientDict = {}
 roomUsageSleepSchedulePatientDict = {}

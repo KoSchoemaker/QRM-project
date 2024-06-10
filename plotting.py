@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import circmean
 
-def wakeSleepCircle(wakeTimes, sleepTimes, patientId):
+def wakeSleepCircle(wakeTimes, sleepTimes, patientId, wakeCircularVariance, sleepCircularVariance):
     wakeAngles = dataAnalysis.getTimesAngles(wakeTimes)
     sleepAngles = dataAnalysis.getTimesAngles(sleepTimes)
 
@@ -17,10 +17,10 @@ def wakeSleepCircle(wakeTimes, sleepTimes, patientId):
     ax = plt.subplot(111, polar=True, zorder=1)
     # ax.scatter(np.cos(wakeAngles), np.sin(wakeAngles))
     ax.scatter(wakeAngles, np.ones(len(wakeAngles))*0.95, zorder=5, facecolor="r", edgecolor="black")
-    ax.scatter(circmean(wakeAngles), np.ones(1)*0.75, zorder=6, facecolor='r', s=250, marker="X", 
+    ax.scatter(circmean(wakeAngles), np.ones(1)*0.75, zorder=6, facecolor='r', s=200, marker="X", 
             linewidth=1, edgecolor='k')
     ax.scatter(sleepAngles, np.ones(len(sleepAngles))*0.9, zorder=5, facecolor="b", edgecolor="black")
-    ax.scatter(circmean(sleepAngles), np.ones(1)*0.75, zorder=6, facecolor='b', s=250, marker="X", 
+    ax.scatter(circmean(sleepAngles), np.ones(1)*0.75, zorder=6, facecolor='b', s=200, marker="X", 
             linewidth=1, edgecolor='k')
     ax.grid(which='major', axis='y')
 
@@ -34,7 +34,13 @@ def wakeSleepCircle(wakeTimes, sleepTimes, patientId):
 
     # make the labels go clockwise
     ax.set_theta_direction(-1)
-    ax.legend(['First line', 'Second line', '3', '4'])
+    ax.legend(['Wake Times', 'Mean Wake Time', 'Sleep Times', 'Mean Sleep Time'], loc='center')
+
+    textstr = f'n_points={len(wakeAngles)}\nwakeVar={format(wakeCircularVariance, '0.3f').lstrip('0')}\nsleepVar={format(sleepCircularVariance, '0.3f').lstrip('0')}'
+    plt.gcf().text(0.73, 0.05, textstr, fontsize=9)
+
+    # ax.set_title(f'Sleep and Wake times for patient {patientId}')
+    # ax.set_title('Manual y', y=1.0, pad=-14)
 
     # place 0 at the top
     # ax.set_theta_offset(np.pi/2.0)    
@@ -44,14 +50,17 @@ def wakeSleepCircle(wakeTimes, sleepTimes, patientId):
     # put the points on the circumference
     plt.ylim(0,1)
 
-    plt.show()
+    plt.title(f'Sleep and Wake Times for Patient {patientId}')
+    # plt.show()
 
     # plt.scatter(np.cos(wakeAngles), np.sin(wakeAngles), c='b', s=15)
     # plt.scatter(np.cos(circmean(wakeAngles)), np.sin(circmean(wakeAngles)), c='g', s=15)
     # plt.scatter(np.cos(sleepAngles), np.sin(sleepAngles), c='y', s=15)
     # plt.scatter(np.cos(circmean(sleepAngles)), np.sin(circmean(sleepAngles)), c='r', s=15)
-    # plt.savefig(f'figures/test1/{patientId} no-nap sleep circle')
-    # plt.close()
+    
+
+    plt.savefig(f'figures/sleep_schedule_latest/{patientId} no-nap sleep circle', bbox_inches='tight')
+    plt.close()
 
 def roomUsageBinaryDay(roomsDict, patientId):
     #first date 2019-04-01 00.00.00     1554069600      86400 seconds in a day

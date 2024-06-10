@@ -53,5 +53,5 @@ def getSleepVariance(patientSleepDataFrame, patientId, plotCircle = False):
     wakeCircularVariance = dataAnalysis.getCircularVariance(wakeSchedule)
     sleepCircularVariance = dataAnalysis.getCircularVariance(sleepSchedule)
     if plotCircle:
-        plotting.wakeSleepCircle(wakeSchedule, sleepSchedule, patientId)
+        plotting.wakeSleepCircle(wakeSchedule, sleepSchedule, patientId, wakeCircularVariance, sleepCircularVariance)
     return {'wake': wakeCircularVariance, 'sleep': sleepCircularVariance}
