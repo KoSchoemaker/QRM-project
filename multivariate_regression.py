@@ -56,8 +56,8 @@ print(summary_totalSleepTime)
 print(summary_totalMinutesInBed)
 
 # Save the regression summaries to text files
-with open('multivariate_regression_totalSleepTime_summary.txt', 'w') as f:
+with open('post_hoc/multivariate_regression_totalSleepTime_summary.txt', 'w') as f:
     f.write(summary_totalSleepTime.as_text())
 
-with open('multivariate_regression_totalMinutesInBed_summary.txt', 'w') as f:
+with open('post_hoc/multivariate_regression_totalMinutesInBed_summary.txt', 'w') as f:
     f.write(summary_totalMinutesInBed.as_text())
