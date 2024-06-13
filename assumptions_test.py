@@ -31,7 +31,7 @@ for routine in df['routine'].unique():
         # Q-Q plot
         stats.probplot(group_data, dist="norm", plot=plt)
         plt.title(f'Q-Q plot for {routine}')
-        plt.savefig(f'qq_plot_{routine}.png')
+        plt.savefig(f'assumptions_test_results/qq_plot_{routine}.png')
         plt.close()
     else:
         normality_results[routine] = 'Not enough data points for normality test (less than 3).'
@@ -47,7 +47,7 @@ results = {
     "Levene's test for homogeneity of variances": homogeneity_results
 }
 
-with open('assumption_tests_results_bigger_sample.json', 'w') as f:
+with open('assumptions_test_results/assumption_tests_results.json', 'w') as f:
     json.dump(results, f, indent=4)
 
-print("Assumption test results saved to assumption_tests_results.json and Q-Q plots saved as PNG files.")
+print("Assumption test results saved to assumptions_test_results/assumption_tests_results.json and Q-Q plots saved as PNG files.")

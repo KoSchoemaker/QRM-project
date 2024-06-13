@@ -8,7 +8,7 @@ In the *TIHM_Dataset* folder, paste the unzipped dataset csv files which can be 
 1. Make sure you have put the required TIHM CSV files in the TIHM_Dataset directory.
 2. run *main.py* to perform preprocessing. Running this will analyse the data and create results for every participant's summed sleep schedule, mean room usage and mean sleep efficiency. These results will be written to intermediate_results/room_usage_mean_sleep_schedule_sum.json, intermediate_results/efficiencies.json and intermediate_results/variables.json
 3. run *clustering.py* to use the summed sleep schedule and mean room usage saved to intermediate_results/room_usage_mean_sleep_schedule_sum.json to cluster participants into clusters of 'routine' and 'no routine'. Results of clustering are saved to intermediate_results/patient_clustering_results_bigger_sample.json
-4. TODO assumptions
+4. Trun *assumptions_test.py*
 5. TODO analysis
 6. TODO post-hoc
 
