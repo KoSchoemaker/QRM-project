@@ -25,17 +25,17 @@ newLabels = np.array([1 if int(label)==0 or int(label)==1 else 0 for label in km
 newColors = ['orange' if int(label)==0 or int(label)==1 else 'blue' for label in kmeans.labels_ ]
 
 # plt.scatter(x, y, c=newColors)
-plt.scatter(x[newLabels==1], y[newLabels==1], c='blue')
-plt.scatter(x[newLabels==0], y[newLabels==0], c='orange')
+plt.scatter(x[newLabels==1], y[newLabels==1], facecolor="orange", edgecolor="black", label='No routine (7)')
+plt.scatter(x[newLabels==0], y[newLabels==0], facecolor="blue", edgecolor="black", label='Routine (10)')
 plt.ylabel('Sleep Schedule Variance')
 plt.xlabel('Room Usage Dice-Sørensen coefficient')
 ax = plt.gca()
-ax.legend(labels=['no routine', 'routine'], title='clusters', loc='upper right')
-# plt.legend()
-# leg = ax.get_legend()
-# leg.legend_handles[0].set_color('orange')
-# leg.legend_handles[1].set_color('blue')
-plt.show()
+
+handles, labels = ax.get_legend_handles_labels()
+ax.legend(handles[::-1], labels[::-1])
+
+plt.title(f'Clustered Participants Based On Sleep Schedule And Room Usage')
+plt.savefig(f'figures/clusters', bbox_inches='tight')
 plt.close()
 
 patientClusteringDict = {key: int(newLabels[i]) for i, key in enumerate(keys)}
