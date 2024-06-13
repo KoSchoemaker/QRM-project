@@ -1,9 +1,0 @@
-{
-    "Mann-Whitney U test": {
-        "U Statistic": 49.0,
-        "p-value": 0.0058823529411764705,
-        "Rank-Biserial Correlation (Effect Size)": 0.8846153846153846,
-        "Power": 0.3049236268154,
-        "Required Sample Size per Group for 80% Power": 44.14519143275245
-    }
-}
