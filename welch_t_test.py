@@ -51,7 +51,7 @@ results = {
     "Power": power
 }
 
-with open('welch_test_results.json', 'w') as f:
+with open('analysis/welch_test_results.json', 'w') as f:
     json.dump(results, f)
 
 results
